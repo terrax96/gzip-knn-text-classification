@@ -1,5 +1,6 @@
 from sklearn.datasets import fetch_20newsgroups
 from gzip_knn import GZipKNN
+from sklearn.metrics import accuracy_score
 
 K = 5
 CATS = [
@@ -35,3 +36,5 @@ if __name__ == "__main__":
     preds = model.predict([sample])
     print("Label:", label, newsgroups_train.target_names[label])
     print("Prediction:", preds[0], newsgroups_train.target_names[preds[0]])
+
+    print("Accuracy:", accuracy_score(newsgroups_test.target, model.predict(newsgroups_test.data)))
