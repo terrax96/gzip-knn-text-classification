@@ -1,8 +1,6 @@
 from sklearn.datasets import fetch_20newsgroups
 from gzip_knn import GZipKNN
 
-# https://aclanthology.org/2023.findings-acl.426.pdf
-
 K = 5
 CATS = [
     'comp.os.ms-windows.misc',
