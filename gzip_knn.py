@@ -1,6 +1,7 @@
 from typing import Iterable
 import gzip
 import numpy as np
+from multiprocessing.dummy import Pool as ThreadPool
 
 class GZipKNN:
     def __init__(self, n_neighbors: int) -> None:
@@ -30,12 +31,16 @@ class GZipKNN:
             return distance_from_x1[top_k_idx], top_k_idx
         else:
             return top_k_idx
+        
+    def _predict(self, x1: str) -> int:
+        top_k_idx = self.kneighbors(x1, return_distance=False)
+        top_k_classes = self.y[top_k_idx].tolist()
+        predict_class = max(set(top_k_classes), key=top_k_classes.count)
+        return predict_class
     
     def predict(self, X: Iterable[str]) -> np.ndarray:
-        predictions = []
-        for x1 in X:
-            top_k_idx = self.kneighbors(x1, return_distance=False)
-            top_k_classes = self.y[top_k_idx].tolist()
-            predict_class = max(set(top_k_classes), key=top_k_classes.count)
-            predictions.append(predict_class)
+        pool = ThreadPool(processes=8)
+        predictions = pool.map(self._predict, X)
+        pool.close()
+        pool.join()
         return np.array(predictions)
