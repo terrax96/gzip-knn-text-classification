@@ -2,6 +2,7 @@ from typing import Iterable
 import gzip
 import numpy as np
 from multiprocessing import Pool, cpu_count
+from tqdm import tqdm
 
 class GZipKNN:
     def __init__(self, n_neighbors: int, n_processes: int | None = None) -> None:
@@ -41,5 +42,5 @@ class GZipKNN:
     
     def predict(self, X: Iterable[str]) -> np.ndarray:
         with Pool(self.n_processes) as pool:
-            predictions = pool.map(self._predict, X)
+            predictions = list(tqdm(pool.imap(self._predict, X), total=len(X)))
         return np.array(predictions)
