@@ -12,6 +12,7 @@ class GZipKNN:
     def fit(self, X: Iterable[str], y: Iterable[int]) -> None:
         self.X = X
         self.y = y
+        self.CX = [len(gzip.compress(x.encode())) for x in X]
 
     def kneighbors(self, x1: str, n_neighbors: int | None = None, return_distance: bool = True) -> tuple[np.ndarray, np.ndarray] | np.ndarray:
         if n_neighbors is None:
@@ -19,8 +20,7 @@ class GZipKNN:
         Cx1 = len(gzip.compress(x1.encode()))
         distance_from_x1 = []
 
-        for x2 in self.X:
-            Cx2 = len(gzip.compress(x2.encode()))
+        for x2, Cx2 in zip(self.X, self.CX):
             x1x2 = " ".join([x1, x2])
             Cx1x2 = len(gzip.compress(x1x2.encode()))
             ncd = (Cx1x2 - min(Cx1, Cx2)) / max(Cx1, Cx2) # Normalized Compression Distance
