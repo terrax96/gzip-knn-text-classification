@@ -26,7 +26,6 @@ class GZipKNN:
         distance_from_x1 = np.array(distance_from_x1)
         sorted_idx = np.argsort(distance_from_x1)
         top_k_idx = sorted_idx[:n_neighbors]
-        print(top_k_idx)
         if return_distance:
             return distance_from_x1[top_k_idx], top_k_idx
         else:
