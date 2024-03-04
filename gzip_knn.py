@@ -38,4 +38,4 @@ class GZipKNN:
             top_k_classes = self.y[top_k_idx].tolist()
             predict_class = max(set(top_k_classes), key=top_k_classes.count)
             predictions.append(predict_class)
-        return predictions
+        return np.array(predictions)
