@@ -18,7 +18,10 @@ if __name__ == "__main__":
     newsgroups_train = fetch_20newsgroups(subset='train', categories=CATS, data_home="./data/20news")
     newsgroups_test = fetch_20newsgroups(subset='test', categories=CATS, data_home="./data/20news")
 
-    sample = newsgroups_test.data[0]
+    sample = newsgroups_test.data[567]
+    label = newsgroups_test.target[567]
+    print(sample)
+    print("__________________________")
 
     model = GZipKNN(n_neighbors=K)
     model.fit(newsgroups_train.data, newsgroups_train.target)
@@ -32,4 +35,5 @@ if __name__ == "__main__":
     print(newsgroups_train.target[top_k_idx])
 
     preds = model.predict([sample])
-    print(preds, [newsgroups_train.target_names[pred] for pred in preds])
+    print("Label:", label, newsgroups_train.target_names[label])
+    print("Prediction:", preds[0], newsgroups_train.target_names[preds[0]])
