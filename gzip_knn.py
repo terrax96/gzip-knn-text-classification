@@ -3,14 +3,14 @@ import gzip
 import numpy as np
 
 class GZipKNN:
-    def __init__(self, n_neighbors) -> None:
+    def __init__(self, n_neighbors: int) -> None:
         self.n_neighbors = n_neighbors
 
-    def fit(self, X: Iterable[str], y: Iterable[int]):
+    def fit(self, X: Iterable[str], y: Iterable[int]) -> None:
         self.X = X
         self.y = y
 
-    def kneighbors(self, x1, n_neighbors=None, return_distance=True):
+    def kneighbors(self, x1: str, n_neighbors: int | None = None, return_distance: bool = True) -> tuple[np.ndarray, np.ndarray] | np.ndarray:
         if n_neighbors is None:
             n_neighbors = self.n_neighbors
         Cx1 = len(gzip.compress(x1.encode()))
@@ -31,7 +31,7 @@ class GZipKNN:
         else:
             return top_k_idx
     
-    def predict(self, X: Iterable[str]):
+    def predict(self, X: Iterable[str]) -> np.ndarray:
         predictions = []
         for x1 in X:
             top_k_idx = self.kneighbors(x1, return_distance=False)
