@@ -1,11 +1,12 @@
 from typing import Iterable
 import gzip
 import numpy as np
-from multiprocessing.dummy import Pool as ThreadPool
+from multiprocessing import Pool, cpu_count
 
 class GZipKNN:
-    def __init__(self, n_neighbors: int) -> None:
+    def __init__(self, n_neighbors: int, n_processes: int | None = None) -> None:
         self.n_neighbors = n_neighbors
+        self.n_processes = cpu_count() if n_processes is None else n_processes
 
     def fit(self, X: Iterable[str], y: Iterable[int]) -> None:
         self.X = X
@@ -39,8 +40,6 @@ class GZipKNN:
         return predict_class
     
     def predict(self, X: Iterable[str]) -> np.ndarray:
-        pool = ThreadPool(processes=8)
-        predictions = pool.map(self._predict, X)
-        pool.close()
-        pool.join()
+        with Pool(self.n_processes) as pool:
+            predictions = pool.map(self._predict, X)
         return np.array(predictions)
